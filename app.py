@@ -55,7 +55,7 @@ def predict():
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return pred_label_test
+    return json.dumps({'label': pred_class_test, 'confidence': values})
 
 if __name__ == '__main__':
     # print(os.listdir())
