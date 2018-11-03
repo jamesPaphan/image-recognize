@@ -50,4 +50,4 @@ if __name__ == '__main__':
     batch = graph.get_tensor_by_name('input:0')
     prediction = graph.get_tensor_by_name('output:0')
 
-    app.run()
+    app.run(debug=True)
