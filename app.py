@@ -11,7 +11,7 @@ def hello_world():
 @app.route('/post', methods=['POST'])
 def index():
     #grabs the data tagged as 'name'
-    name = request.get_json()['name']
+    name = request.form['name']
 
     #sending a hello back to the requester
     return "Hello " + name
