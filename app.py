@@ -21,9 +21,9 @@ def index():
 def predict():
 
     frozen_graph_filename = 'tensorflow_inception_graph.pd'
-    # with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
-    #     graph_def = tf.GraphDef()
-    #     graph_def.ParseFromString(f.read())
+    with open(frozen_graph_filename, "rb") as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
 
     # frozen_graph_filename = 'tensorflow_inception_graph.pd'
     # with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
