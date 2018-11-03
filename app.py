@@ -1,12 +1,22 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request
 import tensorflow as tf
+import os
 
 app = Flask(__name__)
 
+def load_graph(frozen_graph_filename):
+    with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+
+    with tf.Graph().as_default() as graph:
+        tf.import_graph_def(graph_def, name='')
+
+    return graph
+
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'Hello World'
 
 @app.route('/post', methods=['POST'])
 def index():
@@ -19,23 +29,6 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-
-    frozen_graph_filename = 'tensorflow_inception_graph.pd'
-    with open(frozen_graph_filename, "rb") as f:
-        graph_def = tf.GraphDef()
-        graph_def.ParseFromString(f.read())
-
-    # frozen_graph_filename = 'tensorflow_inception_graph.pd'
-    # with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
-    #     graph_def = tf.GraphDef()
-    #     graph_def.ParseFromString(f.read())
-
-    # graph = tf.get_default_graph()
-    # tf.import_graph_def(graph_def, name='')
-    #
-    # batch = graph.get_tensor_by_name('input:0')
-    # prediction = graph.get_tensor_by_name('output:0')
-
     x = request.get_json()['features']
     return x
 
@@ -56,4 +49,7 @@ def predict():
 
 
 if __name__ == '__main__':
+    print(os.listdir())
+    frozen_graph_filename = './models/vgg16_edit.pb'
+    graph = load_graph(frozen_graph_filename)
     app.run()
