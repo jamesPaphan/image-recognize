@@ -11,7 +11,8 @@ def hello_world():
 @app.route('/post', methods=['POST'])
 def index():
     #grabs the data tagged as 'name'
-    name = request.form['name']
+    # name = request.form['name']
+    name = request.get_json()['name']
 
     #sending a hello back to the requester
     return "Hello " + name
@@ -29,7 +30,7 @@ def predict():
     batch = graph.get_tensor_by_name('input:0')
     prediction = graph.get_tensor_by_name('output:0')
 
-    x = request.form['features']
+    x = request.get_json()['features']
     return x
 
     # with tf.Session() as sess:
