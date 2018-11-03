@@ -1,7 +1,10 @@
 from flask import Flask, request, render_template
 import tensorflow as tf
 import numpy as np
+import keras
 import os
+import json
+from keras.models import load_model
 
 app = Flask(__name__)
 
@@ -14,6 +17,16 @@ def load_graph(frozen_graph_filename):
         tf.import_graph_def(graph_def, name='')
 
     return graph
+
+frozen_graph_filename = './models/tensorflow_inception_graph.pb'
+graph = load_graph(frozen_graph_filename)
+batch = graph.get_tensor_by_name('input:0')
+prediction = graph.get_tensor_by_name('output:0')
+
+f = open('./models/imagenet_comp_graph_label_strings.txt', 'r')
+labels = f.read()
+labels = labels.split('\n')
+f.close()
 
 @app.route('/')
 def hello_world():
@@ -30,28 +43,20 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    x = request.get_json()['features']
-    frozen_graph_filename = './models/tensorflow_inception_graph.pb'
-    graph = load_graph(frozen_graph_filename)
-    batch = graph.get_tensor_by_name('input:0')
-    prediction = graph.get_tensor_by_name('output:0')
+    data = request.get_json()['features']
+    x = json.loads(data)
 
     with tf.Session(graph=graph) as sess:
         x = np.expand_dims(x, axis=0)
         values = sess.run(prediction, feed_dict={batch: x})
-        #
+
         pred_class_test = np.argmax(values)
-        # pred_label_test = idx2label[pred_class_test]
+        pred_label_test = labels[pred_class_test]
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return  pred_class_test
+    return pred_label_test
 
 if __name__ == '__main__':
     # print(os.listdir())
-    # frozen_graph_filename = './models/tensorflow_inception_graph.pb'
-    # graph = load_graph(frozen_graph_filename)
-    # batch = graph.get_tensor_by_name('input:0')
-    # prediction = graph.get_tensor_by_name('output:0')
-
     app.run(debug=True)

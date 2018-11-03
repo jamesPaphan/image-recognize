@@ -3,3 +3,5 @@ gunicorn
 tensorflow
 keras
 numpy
+decimal
+json
