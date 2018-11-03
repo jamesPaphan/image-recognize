@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import tensorflow as tf
 import numpy as np
 import os
@@ -14,6 +14,10 @@ def load_graph(frozen_graph_filename):
         tf.import_graph_def(graph_def, name='')
 
     return graph
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 @app.route('/')
 def hello_world():
@@ -34,14 +38,14 @@ def predict():
 
     with tf.Session(graph=graph) as sess:
         x = np.expand_dims(x, axis=0)
-        values = sess.run(prediction, feed_dict={batch: x})
-
-        pred_class_test = np.argmax(values)
+        # values = sess.run(prediction, feed_dict={batch: x})
+        #
+        # pred_class_test = np.argmax(values)
         # pred_label_test = idx2label[pred_class_test]
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return pred_class_test
+    return  x
 
 if __name__ == '__main__':
     # print(os.listdir())
