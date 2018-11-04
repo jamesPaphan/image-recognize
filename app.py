@@ -47,6 +47,7 @@ def predict():
     x = json.loads(data)
 
     with tf.Session(graph=graph) as sess:
+        x = np.reshape(x,(224,224,3))
         x = np.expand_dims(x, axis=0)
         values = sess.run(prediction, feed_dict={batch: x})
 
