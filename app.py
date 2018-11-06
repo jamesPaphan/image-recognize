@@ -50,7 +50,6 @@ def predict():
     # name = request.get_json()['name']
 
     features_base64 = request.form['features']
-    return features_base64[:10]
     features_byte = base64.b64decode(features_base64.encode())
     features_string = features_byte.decode("utf-8")
     return str(len(features_string))
