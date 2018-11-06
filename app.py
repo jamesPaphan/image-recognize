@@ -28,6 +28,20 @@ labels = f.read()
 labels = labels.split('\n')
 f.close()
 
+#######################################################
+from keras.preprocessing import image
+img_path = './models/test_img.png'
+img = image.load_img(img_path, target_size=(224, 224))
+x = image.img_to_array(img)
+
+y = x.tolist()
+my_json_string = json.dumps(y)
+
+tmp = np.reshape(y,(-1))
+my_json_string = json.dumps(tmp.tolist())
+######################################################
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World'
@@ -44,7 +58,9 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()['features']
-    x = json.loads(data)
+    # x = json.loads(data)
+    x = json.loads(my_json_string)
+    text = json.loads(data)
 
     with tf.Session(graph=graph) as sess:
         x = np.reshape(x,(224,224,3))
@@ -56,7 +72,8 @@ def predict():
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
+    # return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
+    return pred_label_test + ' ' + text
 
 if __name__ == '__main__':
     # print(os.listdir())
