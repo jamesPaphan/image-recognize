@@ -6,6 +6,8 @@ import os
 import json
 from keras.models import load_model
 
+from keras.preprocessing import image
+
 app = Flask(__name__)
 
 def load_graph(frozen_graph_filename):
@@ -28,8 +30,7 @@ labels = f.read()
 labels = labels.split('\n')
 f.close()
 
-#######################################################
-from keras.preprocessing import image
+
 img_path = './models/test_img.png'
 img = image.load_img(img_path, target_size=(224, 224))
 x = image.img_to_array(img)
@@ -39,7 +40,6 @@ my_json_string = json.dumps(y)
 
 tmp = np.reshape(y,(-1))
 my_json_string = json.dumps(tmp.tolist())
-######################################################
 
 
 @app.route('/')
