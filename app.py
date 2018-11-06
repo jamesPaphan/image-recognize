@@ -50,13 +50,13 @@ def predict():
     # name = request.get_json()['name']
 
     features_base64 = request.form['features']
-    features_byte= base64.b64decode(features_base64.encode())
+    features_byte = base64.b64decode(features_base64.encode())
     features_string = features_byte.decode("utf-8")
 
     x = np.zeros(224*224*3)
 
     for i in range(0, 224*224*3):
-        x[i] = features_string[i] & 0xFF
+        x[i] = ord(features_string[i])
 
     with tf.Session(graph=graph) as sess:
         x = np.reshape(x,(224,224,3))
