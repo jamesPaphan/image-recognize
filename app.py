@@ -47,7 +47,6 @@ def index():
 def predict():
     features_base64 = request.get_json()['features']
     features_byte = base64.b64decode(features_base64.encode())
-    return str(type(features_byte))
     features_string = features_byte.decode()
     return str(len(features_string))
     x = np.zeros(224*224*3)
