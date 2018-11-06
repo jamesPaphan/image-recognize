@@ -35,11 +35,12 @@ def hello_world():
 @app.route('/post', methods=['POST'])
 def index():
     #grabs the data tagged as 'name'
-    # name = request.form['name']
-    name = request.get_json()['name']
+    name = request.form['name']
+    features = request.form['features']
+    # name = request.get_json()['name']
 
     #sending a hello back to the requester
-    return "Hello " + name
+    return features
 
 @app.route('/predict', methods=['POST'])
 def predict():
