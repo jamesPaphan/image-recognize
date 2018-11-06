@@ -47,12 +47,11 @@ def index():
 def predict():
     features_base64 = request.get_json()['features']
     features_byte = base64.b64decode(bytes(features_base64, "utf-8"))
-    features_string = features_byte.decode("utf-8")
-    return str(len(features_string))
+    return str(len(features_byte))
     x = np.zeros(224*224*3)
 
     for i in range(0, 224*224*3):
-        x[i] = ord(features_string[i])
+        x[i] = features_byte[i]
 
     with tf.Session(graph=graph) as sess:
         x = np.reshape(x,(224,224,3))
