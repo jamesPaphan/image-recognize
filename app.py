@@ -4,6 +4,7 @@ import numpy as np
 import keras
 import os
 import json
+import base64
 from keras.models import load_model
 
 app = Flask(__name__)
@@ -44,9 +45,17 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()['features']
-    x = json.loads(data)
+    # data = request.get_json()['features']
+    # x = json.loads(data)
     # name = request.get_json()['name']
+
+    features_base64 = request.form['features']
+    features_string = base64.b64decode(features_base64)
+
+    x = np.zeros(224*224*3)
+
+    for i in range(0, 224*224*3):
+        x[i] = features_string[i] & 0xFF
 
     with tf.Session(graph=graph) as sess:
         x = np.reshape(x,(224,224,3))
