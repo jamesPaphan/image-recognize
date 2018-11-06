@@ -45,6 +45,7 @@ def index():
 def predict():
     data = request.get_json()['features']
     x = json.loads(data)
+    name = request.get_json()['name']
 
     with tf.Session(graph=graph) as sess:
         x = np.reshape(x,(224,224,3))
@@ -56,7 +57,8 @@ def predict():
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
+    # return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
+    return name
 
 if __name__ == '__main__':
     # print(os.listdir())
