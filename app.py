@@ -52,7 +52,7 @@ def predict():
     features_base64 = request.form['features']
     features_byte = base64.b64decode(features_base64.encode())
     features_string = features_byte.decode("utf-8")
-
+    return str(len(features_string))
     x = np.zeros(224*224*3)
 
     for i in range(0, 224*224*3):
