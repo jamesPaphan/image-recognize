@@ -46,10 +46,9 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     features_base64 = request.get_json()['features']
-    return str(len(features_base64))
-
-    features_byte = base64.b64decode(features_base64.encode("utf-8"))
-    features_string = features_byte.decode("utf-8")
+    features_byte = base64.b64decode(features_base64.encode())
+    return str(type(features_byte))
+    features_string = features_byte.decode()
     return str(len(features_string))
     x = np.zeros(224*224*3)
 
