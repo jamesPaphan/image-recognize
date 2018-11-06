@@ -46,7 +46,7 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     features_base64 = request.get_json()['features']
-    # features_base64 = json.loads(data)
+    return str(len(features_base64))
 
     features_byte = base64.b64decode(features_base64.encode("utf-8"))
     features_string = features_byte.decode("utf-8")
