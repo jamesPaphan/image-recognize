@@ -31,9 +31,9 @@ labels = labels.split('\n')
 f.close()
 
 
-img_path = './models/test_img.png'
-img = image.load_img(img_path, target_size=(224, 224))
-xx = image.img_to_array(img)
+# img_path = './models/test_img.png'
+# img = image.load_img(img_path, target_size=(224, 224))
+# xx = image.img_to_array(img)
 
 # y = xx.tolist()
 # my_json_string = json.dumps(y)
