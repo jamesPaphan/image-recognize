@@ -73,7 +73,7 @@ def predict():
         #     pred_label_test,
         #     values[0][pred_class_test]))
     # return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
-    return pred_label_test + ' ' + text
+    return pred_label_test + ' ' + str(text)
 
 if __name__ == '__main__':
     # print(os.listdir())
