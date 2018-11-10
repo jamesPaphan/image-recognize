@@ -36,8 +36,8 @@ def hello_world():
 @app.route('/post', methods=['POST'])
 def index():
     #grabs the data tagged as 'name'
-    name = request.form['name']
-    features = request.form['features']
+    # name = request.form['name']
+    # features = request.form['features']
     # name = request.get_json()['name']
 
     #sending a hello back to the requester
@@ -45,25 +45,22 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    features_string_base64 = request.get_json()['features']
-    features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))
+    features_string_base64 = request.get_json()['features']                     #got string of base64 : 'YWJj'
+    features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
 
-    x = np.zeros(224*224*3)
-    for i in range(0, 224*224*3):
-        x[i] = features_byte[i]
+    features = np.frombuffer(features_byte, dtype=np.uint8)                     #convert byte to array of int
 
     with tf.Session(graph=graph) as sess:
-        x = np.reshape(x,(224,224,3))
-        x = np.expand_dims(x, axis=0)
-        values = sess.run(prediction, feed_dict={batch: x})
+        features = np.reshape(features, (224,224,3))
+        features = np.expand_dims(features, axis=0)
+        values = sess.run(prediction, feed_dict={batch: features})
 
         pred_class_test = np.argmax(values)
         pred_label_test = labels[pred_class_test]
         # print('Prediction :{}, confidence : {:.3f}'.format(
         #     pred_label_test,
         #     values[0][pred_class_test]))
-    return json.dumps({'label': pred_label_test, 'confidence': str(np.max(values))})
-    # return pred_label_test+' '+name
+    return json.dumps({'label': pred_label_test, 'confidence': str(values[0][pred_class_test])})
 
 if __name__ == '__main__':
     # print(os.listdir())
