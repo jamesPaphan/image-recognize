@@ -43,15 +43,9 @@ for file in os.listdir("./models"):
 def hello_world():
     return 'Hello World'
 
-@app.route('/post', methods=['POST'])
-def index():
-    #grabs the data tagged as 'name'
-    # name = request.form['name']
-    # features = request.form['features']
-    # name = request.get_json()['name']
-
-    #sending a hello back to the requester
-    return features
+@app.route('/model', methods=['GET'])
+def models():
+    return str(prediction)
 
 @app.route('/predict', methods=['POST'])
 def predict():
