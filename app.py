@@ -47,7 +47,7 @@ def predict():
     features_string_base64 = request.get_json()['features']                     #got string of base64 : 'YWJj'
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
 
-    features = np.frombuffer(features_byte, dtype=np.uint8)                     #convert byte to array of int
+    features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)                     #convert byte to array of int
 
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
