@@ -28,7 +28,7 @@ labels = {}
 for file in os.listdir("./models"):
     if file.endswith(".pb"):
         frozen_graph_filename = './models/' + file
-        _class = file[:-4]
+        _class = file[:-3]
         graph = load_graph(frozen_graph_filename)
         batch[_class] = graph.get_tensor_by_name('input:0')
         prediction[_class] = graph.get_tensor_by_name('output:0')
