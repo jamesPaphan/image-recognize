@@ -24,10 +24,9 @@ graph = load_graph(frozen_graph_filename)
 batch = graph.get_tensor_by_name('input:0')
 prediction = graph.get_tensor_by_name('output:0')
 
-f = open('./models/dog_breeds.txt', 'r')
-labels = f.read()
-labels = labels.split('\n')
-f.close()
+with open('./models/dog_breeds.txt', 'r') as f:
+    labels = f.read()
+    labels = labels.split('\n')
 
 @app.route('/')
 def hello_world():
