@@ -19,12 +19,12 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-frozen_graph_filename = './models/tensorflow_inception_graph.pb'
+frozen_graph_filename = './models/dog_breeds.pb'
 graph = load_graph(frozen_graph_filename)
 batch = graph.get_tensor_by_name('input:0')
 prediction = graph.get_tensor_by_name('output:0')
 
-f = open('./models/imagenet_comp_graph_label_strings.txt', 'r')
+f = open('./models/dog_breeds.txt', 'r')
 labels = f.read()
 labels = labels.split('\n')
 f.close()
@@ -57,9 +57,7 @@ def predict():
 
         pred_class_test = np.argmax(values)
         pred_label_test = labels[pred_class_test]
-        # print('Prediction :{}, confidence : {:.3f}'.format(
-        #     pred_label_test,
-        #     values[0][pred_class_test]))
+
     return json.dumps({'label': pred_label_test, 'confidence': str(values[0][pred_class_test])})
 
 if __name__ == '__main__':
