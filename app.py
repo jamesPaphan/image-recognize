@@ -31,7 +31,7 @@ def load_model(file):
         label = f.read()
         labels = label.split('\n')
 
-    return batch, prediction, labels
+    return graph, batch, prediction, labels
 
 # batch = {}
 # prediction = {}
@@ -62,7 +62,7 @@ def models():
 @app.route('/predict', methods=['POST'])
 def predict():
     model = request.get_json()['model']
-    batch, prediction, labels = load_model(model)
+    graph, batch, prediction, labels = load_model(model)
 
     features_string_base64 = request.get_json()['features']                     #got string of base64 : 'YWJj'
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
