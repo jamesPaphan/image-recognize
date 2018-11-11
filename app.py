@@ -21,21 +21,33 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-batch = {}
-prediction = {}
-labels = {}
+def load_model(file):
+    frozen_graph_filename = './models/' + file + '.pb'
+    graph = load_graph(frozen_graph_filename)
+    batch = graph.get_tensor_by_name('input:0')
+    prediction = graph.get_tensor_by_name('output:0')
 
-for file in os.listdir("./models"):
-    if file.endswith(".pb"):
-        frozen_graph_filename = './models/' + file
-        _class = file[:-3]
-        graph = load_graph(frozen_graph_filename)
-        batch[_class] = graph.get_tensor_by_name('input:0')
-        prediction[_class] = graph.get_tensor_by_name('output:0')
+    with open('./models/' + file + '.txt', 'r') as f:
+        label = f.read()
+        labels = label.split('\n')
 
-        with open('./models/'+_class+'.txt', 'r') as f:
-            label = f.read()
-            labels[_class] = label.split('\n')
+    return batch, prediction, labels
+
+# batch = {}
+# prediction = {}
+# labels = {}
+#
+# for file in os.listdir("./models"):
+#     if file.endswith(".pb"):
+#         frozen_graph_filename = './models/' + file
+#         _class = file[:-3]
+#         graph = load_graph(frozen_graph_filename)
+#         batch[_class] = graph.get_tensor_by_name('input:0')
+#         prediction[_class] = graph.get_tensor_by_name('output:0')
+#
+#         with open('./models/'+_class+'.txt', 'r') as f:
+#             label = f.read()
+#             labels[_class] = label.split('\n')
 
 ###########################################################
 
@@ -50,6 +62,7 @@ def models():
 @app.route('/predict', methods=['POST'])
 def predict():
     model = request.get_json()['model']
+    batch, prediction, labels = load_model(model)
 
     features_string_base64 = request.get_json()['features']                     #got string of base64 : 'YWJj'
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
@@ -59,10 +72,10 @@ def predict():
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
-        values = sess.run(prediction[model], feed_dict={batch[model]: features})
+        values = sess.run(prediction, feed_dict={batch: features})
 
         pred_class_test = np.argmax(values)
-        pred_label_test = labels[model][pred_class_test]
+        pred_label_test = labels[pred_class_test]
 
     return json.dumps({'label': pred_label_test, 'confidence': str(values[0][pred_class_test])})
 
