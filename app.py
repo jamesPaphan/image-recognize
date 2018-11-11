@@ -26,18 +26,6 @@ batch = {}
 prediction = {}
 labels = {}
 
-for file in os.listdir("./models"):
-    if file.endswith(".pb"):
-        frozen_graph_filename = './models/' + file
-        _class = file[:-3]
-        graph[_class] = load_graph(frozen_graph_filename)
-        batch[_class] = graph[_class].get_tensor_by_name('input:0')
-        prediction[_class] = graph[_class].get_tensor_by_name('output:0')
-
-        with open('./models/'+_class+'.txt', 'r') as f:
-            label = f.read()
-            labels[_class] = label.split('\n')
-
 ###########################################################
 
 @app.route('/')
@@ -69,4 +57,17 @@ def predict():
 
 if __name__ == '__main__':
     # print(os.listdir())
+
+    for file in os.listdir("./models"):
+        if file.endswith(".pb"):
+            frozen_graph_filename = './models/' + file
+            _class = file[:-3]
+            graph[_class] = load_graph(frozen_graph_filename)
+            batch[_class] = graph[_class].get_tensor_by_name('input:0')
+            prediction[_class] = graph[_class].get_tensor_by_name('output:0')
+
+            with open('./models/'+_class+'.txt', 'r') as f:
+                label = f.read()
+                labels[_class] = label.split('\n')
+                
     app.run(debug=True)
