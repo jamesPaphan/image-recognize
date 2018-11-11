@@ -59,7 +59,8 @@ if __name__ == '__main__':
     # print(os.listdir())
 
     for file in os.listdir("./models"):
-        if file.endswith(".pb"):
+        # if file.endswith(".pb"):
+        if (file=='dog_breeds.pb'):
             frozen_graph_filename = './models/' + file
             _class = file[:-3]
             graph[_class] = load_graph(frozen_graph_filename)
@@ -69,5 +70,5 @@ if __name__ == '__main__':
             with open('./models/'+_class+'.txt', 'r') as f:
                 label = f.read()
                 labels[_class] = label.split('\n')
-                
+
     app.run(debug=True)
