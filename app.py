@@ -44,6 +44,7 @@ def predict():
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
     features = features.astype(float)
+
     graph = g1
     if(model == 'fruit'):
         graph = g2
@@ -58,6 +59,7 @@ def predict():
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
+        print(features, file=sys.stdout)
         features = preprocess_input(features)
         values = sess.run(prediction, feed_dict={batch: features})
 
