@@ -21,7 +21,7 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-graph = {}
+g1 = load_graph('./models/dog_breeds.pb')
 ###########################################################
 
 @app.route('/')
@@ -30,7 +30,7 @@ def hello_world():
 
 @app.route('/model', methods=['GET'])
 def models():
-    return str(prediction)
+    return str(graph)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -41,14 +41,18 @@ def predict():
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
 
-    batch = graph[model].get_tensor_by_name('input:0')
-    prediction = graph[model].get_tensor_by_name('output:0')
+    graph = g1
+    if(model=='dog_breeds'):
+        graph = g1
+
+    batch = graph.get_tensor_by_name('input:0')
+    prediction = graph.get_tensor_by_name('output:0')
 
     with open('./models/'+_class+'.txt', 'r') as f:
         label = f.read()
         labels = label.split('\n')
 
-    with tf.Session(graph=graph[model]) as sess:
+    with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
         values = sess.run(prediction, feed_dict={batch: features})
@@ -61,12 +65,12 @@ def predict():
 if __name__ == '__main__':
     # print(os.listdir())
 
-    for file in os.listdir("./models"):
-        # if file.endswith(".pb"):
-        if (file=='dog_breeds.pb'):
-            frozen_graph_filename = './models/' + file
-            _class = file[:-3]
-            graph[_class] = load_graph(frozen_graph_filename)
+    # for file in os.listdir("./models"):
+    #     # if file.endswith(".pb"):
+    #     if (file=='dog_breeds.pb'):
+    #         frozen_graph_filename = './models/' + file
+    #         _class = file[:-3]
+    #         graph = load_graph(frozen_graph_filename)
 
 
     app.run(debug=True)
