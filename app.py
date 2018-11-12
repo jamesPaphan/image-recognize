@@ -22,7 +22,7 @@ def load_graph(frozen_graph_filename):
     return graph
 
 g1 = load_graph('./models/dog_breeds.pb')
-g2 = load_graph('./models/general.pb')
+g2 = load_graph('./models/fruit.pb')
 
 ###########################################################
 
@@ -44,7 +44,7 @@ def predict():
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
 
     graph = g1
-    if(model == 'dog_breeds'):
+    if(model == 'fruit'):
         graph = g2
 
     batch = graph.get_tensor_by_name('input:0')
