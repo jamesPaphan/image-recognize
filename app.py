@@ -6,6 +6,7 @@ import os
 import json
 import base64
 from keras.models import load_model
+from keras.applications.mobilenet_v2 import preprocess_input
 
 app = Flask(__name__)
 
@@ -42,7 +43,7 @@ def predict():
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
-
+    
     graph = g1
     if(model == 'fruit'):
         graph = g2
@@ -57,6 +58,7 @@ def predict():
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
+        features = preprocess_input(features)
         values = sess.run(prediction, feed_dict={batch: features})
 
         pred_class_test = np.argmax(values)
