@@ -21,7 +21,14 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-g1 = load_graph('./models/dog_breeds.pb')
+graph = load_graph('./models/dog_breeds.pb')
+
+batch = graph.get_tensor_by_name('input:0')
+prediction = graph.get_tensor_by_name('output:0')
+
+with open('./models/'+_class+'.txt', 'r') as f:
+    label = f.read()
+    labels = label.split('\n')
 ###########################################################
 
 @app.route('/')
@@ -40,17 +47,6 @@ def predict():
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
-
-    graph = g1
-    if(model=='dog_breeds'):
-        graph = g1
-
-    batch = graph.get_tensor_by_name('input:0')
-    prediction = graph.get_tensor_by_name('output:0')
-
-    with open('./models/'+_class+'.txt', 'r') as f:
-        label = f.read()
-        labels = label.split('\n')
 
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
