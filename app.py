@@ -37,7 +37,7 @@ def hello_world():
 
 @app.route('/model', methods=['GET'])
 def models():
-    return str(graph)
+    return str(prediction)
 
 @app.route('/predict', methods=['POST'])
 def predict():
