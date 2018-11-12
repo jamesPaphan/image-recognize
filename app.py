@@ -21,7 +21,7 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-grapg = {}
+graph = {}
 ###########################################################
 
 @app.route('/')
@@ -41,8 +41,8 @@ def predict():
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
 
-    batch = graph[_class].get_tensor_by_name('/input:0')
-    prediction = graph[_class].get_tensor_by_name('/output:0')
+    batch = graph[_class].get_tensor_by_name('input:0')
+    prediction = graph[_class].get_tensor_by_name('output:0')
 
     with open('./models/'+_class+'.txt', 'r') as f:
         label = f.read()
