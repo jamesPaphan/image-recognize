@@ -21,7 +21,7 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-file = 'general'
+file = 'dog_breeds'
 graph = load_graph('./models/'+file+'.pb')
 batch = graph.get_tensor_by_name('input:0')
 prediction = graph.get_tensor_by_name('output:0')
