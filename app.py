@@ -60,7 +60,7 @@ def predict():
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
-        print(features, file=sys.stdout)
+        # print(features, file=sys.stdout)
         features = preprocess_input(features)
         values = sess.run(prediction, feed_dict={batch: features})
 
