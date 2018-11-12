@@ -41,8 +41,8 @@ def predict():
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
 
-    batch = graph[_class].get_tensor_by_name('input:0')
-    prediction = graph[_class].get_tensor_by_name('output:0')
+    batch = graph[model].get_tensor_by_name('input:0')
+    prediction = graph[model].get_tensor_by_name('output:0')
 
     with open('./models/'+_class+'.txt', 'r') as f:
         label = f.read()
@@ -51,10 +51,10 @@ def predict():
     with tf.Session(graph=graph[model]) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
-        values = sess.run(prediction[model], feed_dict={batch[model]: features})
+        values = sess.run(prediction, feed_dict={batch: features})
 
         pred_class_test = np.argmax(values)
-        pred_label_test = labels[model][pred_class_test]
+        pred_label_test = labels[pred_class_test]
 
     return json.dumps({'label': pred_label_test, 'confidence': str(values[0][pred_class_test])})
 
