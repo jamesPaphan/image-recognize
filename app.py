@@ -21,12 +21,12 @@ def load_graph(frozen_graph_filename):
 
     return graph
 
-graph = load_graph('./models/dog_breeds.pb')
-
+file = 'dog_breeds'
+graph = load_graph('./models/'+file+'.pb')
 batch = graph.get_tensor_by_name('input:0')
 prediction = graph.get_tensor_by_name('output:0')
 
-with open('./models/'+_class+'.txt', 'r') as f:
+with open('./models/'+file+'.txt', 'r') as f:
     label = f.read()
     labels = label.split('\n')
 ###########################################################
