@@ -43,7 +43,7 @@ def predict():
     features_byte = base64.b64decode(bytes(features_string_base64, "utf-8"))    #'YWJj' -> b'YWJj' -> b'abc'
 
     features = np.frombuffer(features_byte, dtype=np.uint8 ,count=224*224*3)    #convert byte to array of int
-
+    features = features.astype(float)
     graph = g1
     if(model == 'fruit'):
         graph = g2
@@ -58,9 +58,8 @@ def predict():
     with tf.Session(graph=graph) as sess:
         features = np.reshape(features, (224,224,3))
         features = np.expand_dims(features, axis=0)
-        x = np.copy(features)
-        x = preprocess_input(x)
-        values = sess.run(prediction, feed_dict={batch: x})
+        features = preprocess_input(features)
+        values = sess.run(prediction, feed_dict={batch: features})
 
         pred_class_test = np.argmax(values)
         pred_label_test = labels[pred_class_test]
